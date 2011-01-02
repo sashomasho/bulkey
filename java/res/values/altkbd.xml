@@ -1,0 +1,21 @@
+<resources>
+    <string name="phonetic_keyboard_traditional">Phonetic Traditional</string>
+    <string name="phonetic_keyboard_standard">Phonetic Standard</string>
+    <string name="bds_keyboard">BDS</string>
+
+    <string-array name="alt_keyboards_entries">
+        <item>@string/phonetic_keyboard_traditional</item>
+        <item>@string/bds_keyboard</item>
+        <item>@string/phonetic_keyboard_standard</item>
+    </string-array>
+
+    <string name="kbd_qwerty" translatable="false">0</string>
+    <string name="kbd_qwerty_alt"  translatable="false">1</string>
+    <string name="kbd_qwerty_alt2" translatable="false">2</string>
+
+    <string-array name="alt_keyboards_values" translatable="false">
+        <item>@string/kbd_qwerty</item>
+        <item>@string/kbd_qwerty_alt</item>
+        <item>@string/kbd_qwerty_alt2</item>
+    </string-array>
+</resources>
