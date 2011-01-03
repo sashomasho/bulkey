@@ -29,55 +29,54 @@
         android:rowEdgeFlags="top"
     >
         <Key
-            android:keyLabel="у"
+            android:keyLabel="ы"
             android:popupKeyboard="@xml/kbd_popup_template"
-            android:popupCharacters="1"
+            android:popupCharacters="1э"
             android:keyWidth="8.75%p"
             android:keyEdgeFlags="left" />
         <Key
-            android:keyLabel="е"
+            android:keyLabel="у"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="2" />
         <Key
-            android:keyLabel="и"
+            android:keyLabel="е"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="3" />
         <Key
-            android:keyLabel="ш"
+            android:keyLabel="и"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="4" />
         <Key
-            android:keyLabel="щ"
+            android:keyLabel="ш"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="5" />
         <Key
-            android:keyLabel="к"
+            android:keyLabel="щ"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="6" />
         <Key
-            android:keyLabel="с"
+            android:keyLabel="к"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="7" />
         <Key
-            android:keyLabel="д"
+            android:keyLabel="с"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="8" />
         <Key
-            android:keyLabel="з"
+            android:keyLabel="д"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="9" />
         <Key
-            android:keyLabel="ц"
+            android:keyLabel="з"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="0" />
         <Key
-            android:keyLabel="ч"
+            android:keyLabel="ц"
             android:keyWidth="8.75%p"
-            android:keyEdgeFlags="right" />
+            android:keyEdgeFlags="right"/>
     </Row>
     <Row>
         <Key
-            android:horizontalGap="5%p"
             android:keyLabel="ь"
             android:keyWidth="8.75%p"
             android:keyEdgeFlags="left" />
@@ -98,7 +97,9 @@
         <Key
             android:keyLabel="в" />
         <Key
-            android:keyLabel="м"
+            android:keyLabel="м" />
+        <Key
+            android:keyLabel="ч"
             android:keyWidth="8.75%p"
             android:keyEdgeFlags="right"/>
     </Row>
@@ -115,7 +116,9 @@
         <Key
             android:keyLabel="ю" />
         <Key
-            android:keyLabel="й" />
+            android:keyLabel="й"
+            android:popupKeyboard="@xml/kbd_popup_template"
+            android:popupCharacters="ѝ" />
         <Key
             android:keyLabel="ъ" />
         <Key

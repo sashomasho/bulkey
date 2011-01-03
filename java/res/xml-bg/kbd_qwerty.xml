@@ -91,7 +91,9 @@
         <Key
             android:keyLabel="х" />
         <Key
-            android:keyLabel="й" />
+            android:keyLabel="й"
+            android:popupKeyboard="@xml/kbd_popup_template"
+            android:popupCharacters="ѝ" />
         <Key
             android:keyLabel="к" />
         <Key
