@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+**
+** Copyright 2010, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<mapping>
+    <key name="a" value="а"/>
+    <key name="b" value="б"/>
+    <key name="w" value="в"/>
+    <key name="g" value="г"/>
+    <key name="d" value="д"/>
+    <key name="e" value="е"/>
+    <key name="v" value="ж"/>
+    <key name="z" value="з"/>
+    <key name="i" value="и"/>
+    <key name="j" value="й"/>
+    <key name="k" value="к"/>
+    <key name="l" value="л"/>
+    <key name="m" value="м"/>
+    <key name="n" value="н"/>
+    <key name="o" value="о"/>
+    <key name="p" value="п"/>
+    <key name="r" value="р"/>
+    <key name="s" value="с"/>
+    <key name="t" value="т"/>
+    <key name="u" value="у"/>
+    <key name="f" value="ф"/>
+    <key name="h" value="х"/>
+    <key name="c" value="ц"/>
+    <key name="x" value="ь"/>
+    <key name="y" value="ъ"/>
+    <key name="q" value="я"/>
+    <compose name="цх" value="ч"/>
+    <compose name="сх" value="ш"/>
+    <compose name="шт" value="щ"/>
+    <compose name="ъу" value="ю"/>
+</mapping>

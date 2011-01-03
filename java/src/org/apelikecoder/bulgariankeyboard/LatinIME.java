@@ -229,6 +229,8 @@ public class LatinIME extends InputMethodService
 
     private ArrayList<WordAlternatives> mWordHistory = new ArrayList<WordAlternatives>();
 
+    private Mapper mapper;
+
     private class VoiceResults {
         List<String> candidates;
         Map<String, List<CharSequence>> alternatives;
@@ -376,7 +378,6 @@ public class LatinIME extends InputMethodService
         String packageName = LatinIME.class.getPackage().getName();
         XmlResourceParser xrp = res.getXml(R.xml.dictionary);
         ArrayList<Integer> dictionaries = new ArrayList<Integer>();
-
         try {
             int current = xrp.getEventType();
             while (current != XmlResourceParser.END_DOCUMENT) {
@@ -407,6 +408,18 @@ public class LatinIME extends InputMethodService
         return dict;
     }
 
+    private void loadMapper(Resources res) {
+        System.out.println(">>>>>>>>>>>>>");
+        try {
+            mapper = new Mapper(res.getXml(R.xml.kbdmapping));
+        } catch (Exception ex) {
+            mapper = null;
+            System.out.println("no kbd mapping for " + mLanguageSwitcher.getInputLanguage());
+            ex.printStackTrace();
+        }
+        System.out.println("<<<<<<<<<<<<<");
+    }
+
     private void initSuggest(String locale) {
         mInputLocale = locale;
 
@@ -422,6 +435,7 @@ public class LatinIME extends InputMethodService
         mQuickFixes = sp.getBoolean(PREF_QUICK_FIXES, true);
 
         int[] dictionaries = getDictionary(orig);
+        System.out.println("DICTS " + dictionaries.length);
         mSuggest = new Suggest(this, dictionaries);
         updateAutoTextEnabled(saveLocale);
         if (mUserDictionary != null) mUserDictionary.close();
@@ -445,9 +459,10 @@ public class LatinIME extends InputMethodService
         updateCorrectionMode();
         mWordSeparators = mResources.getString(R.string.word_separators);
         mSentenceSeparators = mResources.getString(R.string.sentence_separators);
-
+        loadMapper(orig);
         conf.locale = saveLocale;
         orig.updateConfiguration(conf, orig.getDisplayMetrics());
+        
     }
 
     @Override
@@ -946,7 +961,46 @@ public class LatinIME extends InputMethodService
                 }
                 break;
         }
+        if (mapper != null) {
+            if (!event.isAltPressed() && translateKeyDown(keyCode, event)) {
+                updateShiftKeyState(getCurrentInputEditorInfo());
+                return true;
+            }
+        }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private boolean translateKeyDown(int keyCode, KeyEvent event) {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic != null) {
+            char c = mapper.getMappedChar((char) keyCode);
+            //System.out.println("zzzzzz" + (int)c);
+            if (c != 0) {
+                LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
+                boolean shift_pressed = event.isShiftPressed()
+                                || (inputView != null ? inputView.isShifted() : false);
+                CharSequence cs = ic.getTextBeforeCursor(1, 0);
+                int L = cs.length();
+                if (L > 0) {
+                    char prev = cs.charAt(L-1);
+                    StringBuilder s = new StringBuilder();
+                    s.append(prev);
+                    s.append(c);
+                    char composed = mapper.getComposed(s.toString());
+                    if (composed != 0) {
+                        ic.deleteSurroundingText(1, 0);
+                        c = composed;
+                        shift_pressed = Character.isUpperCase(prev);
+                    }
+                }
+                if (shift_pressed/* || mHardKeyboard.isMetaOn(HardKeyboardState.META_SHIFT)*/)
+                    c = Character.toUpperCase(c);
+                //mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
+                sendKeyChar(c);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
