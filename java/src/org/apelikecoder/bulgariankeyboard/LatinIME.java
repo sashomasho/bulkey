@@ -965,8 +965,12 @@ public class LatinIME extends InputMethodService
                 }
                 break;
         }
+        if (keyCode == KeyEvent.KEYCODE_SPACE && event.isShiftPressed()) {
+            toggleLanguage(false, true);
+            return true;
+        }
         if (mapper != null) {
-            if (!event.isAltPressed() && translateKeyDown(keyCode, event)) {
+            if (translateKeyDown(keyCode, event)) {
                 updateShiftKeyState(getCurrentInputEditorInfo());
                 return true;
             }
@@ -978,7 +982,6 @@ public class LatinIME extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic != null) {
             char c = mapper.getMappedChar((char) keyCode);
-            //System.out.println("zzzzzz" + (int)c);
             if (c != 0) {
                 LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
                 boolean shift_pressed = event.isShiftPressed()

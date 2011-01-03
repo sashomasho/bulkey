@@ -218,7 +218,7 @@ public class InputLanguageSelection extends PreferenceActivity implements Prefer
     ArrayList<Loc> getUniqueLocales() {
         String[] locales = getAssets().getLocales();
         for (String s : locales)
-            System.out.println(s);
+            System.out.println("LOCALE: " + s);
         Arrays.sort(locales);
         ArrayList<Loc> uniqueLocales = new ArrayList<Loc>();
 

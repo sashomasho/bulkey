@@ -56,7 +56,7 @@ public class Mapper {
     }
 
     public char getComposed(String composer) {
-        System.out.println(composers.get(composer) + " " + composer);
+//        System.out.println(composers.get(composer) + " " + composer);
         Character c = composers.get(composer);
         return c != null ? c : 0;
     }
