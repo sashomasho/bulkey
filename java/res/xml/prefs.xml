@@ -77,15 +77,6 @@
                 android:action="org.apelikecoder.bulgariankeyboard.INPUT_LANGUAGE_SELECTION"/>
     </PreferenceScreen>
 
-    <ListPreference
-            android:key="bg_locale_kbd"
-            android:title="Bulgarian Keyboad Mode"
-            android:persistent="true"
-            android:entryValues="@array/alt_keyboards_values"
-            android:entries="@array/alt_keyboards_entries"
-            android:defaultValue="@string/kbd_qwerty"
-            />
-
     <PreferenceCategory
             android:title="@string/prediction_category"
             android:key="prediction_settings">

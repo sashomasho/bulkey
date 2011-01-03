@@ -19,6 +19,7 @@ package org.apelikecoder.bulgariankeyboard;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.view.InflateException;
 
@@ -28,6 +29,13 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class KeyboardSwitcher implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    public static final int KEYBOARD_QWERTY = 0;
+    public static final int KEYBOARD_QWERTY_ALT = 1;
+    public static final int KEYBOARD_QWERTY_ALT2 = 2;
+    public static final int KEYBOARD_QWERTY_BLK = 3;
+    public static final int KEYBOARD_QWERTY_ALT_BLK = 4;
+    public static final int KEYBOARD_QWERTY_ALT2_BLK = 5;
 
     public static final int MODE_NONE = 0;
     public static final int MODE_TEXT = 1;
@@ -80,7 +88,16 @@ public class KeyboardSwitcher implements SharedPreferences.OnSharedPreferenceCha
         R.xml.kbd_symbols, R.xml.kbd_symbols_black};
     private static final int[] KBD_SYMBOLS_SHIFT = new int[] {
         R.xml.kbd_symbols_shift, R.xml.kbd_symbols_shift_black};
-    private static final int[] KBD_QWERTY = new int[] {R.xml.kbd_qwerty, R.xml.kbd_qwerty_black};
+    
+    //add support for up to three keyboards per locale
+    private static final int[] KBD_QWERTY = new int[] {
+        R.xml.kbd_qwerty,
+        R.xml.kbd_qwerty_alt,
+        R.xml.kbd_qwerty_alt2,
+        R.xml.kbd_qwerty_black,
+        R.xml.kbd_qwerty_black, //TODO - alt_black
+        R.xml.kbd_qwerty_alt2_black,
+    };
 
     private static final int SYMBOLS_MODE_STATE_NONE = 0;
     private static final int SYMBOLS_MODE_STATE_BEGIN = 1;
@@ -534,21 +551,16 @@ public class KeyboardSwitcher implements SharedPreferences.OnSharedPreferenceCha
         } else {
             mHasSettingsKey = false;
         }
-        mBgKbdMode = prefs.getString("bg_locale_kbd", mInputMethodService.getString(R.string.phonetic_keyboard_traditional));
 
     }
 
-    private String mBgKbdMode;
+    public int getKeyboardId() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mInputMethodService);
+        int res = prefs.getInt(mInputLocale.getLanguage(), KEYBOARD_QWERTY);
+        return res;
+    }
+
     private int getQwertyLayoutId(int charColorId) {
-        //System.out.println(mInputLocale.getLanguage() + " " + mInputLocale.getCountry());
-        if (mInputLocale.getLanguage().equalsIgnoreCase("bg")) {
-            if (mBgKbdMode != null) {
-                if (mBgKbdMode.equals(mInputMethodService.getString(R.string.kbd_qwerty_alt2)))
-                    return R.xml.kbd_qwerty_alt2;
-                else if( mBgKbdMode.equals(mInputMethodService.getString(R.string.kbd_qwerty_alt)))
-                    return R.xml.kbd_qwerty_alt;
-            }
-        }
-        return KBD_QWERTY[charColorId];
+        return KBD_QWERTY[getKeyboardId() * (charColorId > 0 ? 2 : 1) ];
     }
 }

@@ -1,0 +1,5 @@
+<resources>
+    <string name="kbd_qwerty">Phonetic keyboard (Traditional)</string>
+    <string name="kbd_qwerty_alt">BDS</string>
+    <string name="kbd_qwerty_alt2">Phonetic keyboard (Standard)</string>
+</resources>

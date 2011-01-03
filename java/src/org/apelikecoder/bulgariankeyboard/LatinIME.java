@@ -376,7 +376,12 @@ public class LatinIME extends InputMethodService
      */
     /* package */ static int[] getDictionary(Resources res) {
         String packageName = LatinIME.class.getPackage().getName();
-        XmlResourceParser xrp = res.getXml(R.xml.dictionary);
+        XmlResourceParser xrp;
+        try {
+            xrp = res.getXml(R.xml.dictionary);
+        } catch (Resources.NotFoundException ex) {
+            return new int[0];
+        }
         ArrayList<Integer> dictionaries = new ArrayList<Integer>();
         try {
             int current = xrp.getEventType();
@@ -408,16 +413,15 @@ public class LatinIME extends InputMethodService
         return dict;
     }
 
+    private static final int [] KBD_MAPPINGS = new int[] {
+            R.xml.kbd_mappings, R.xml.kbd_mappings_alt, R.xml.kbd_mappings_alt2};
     private void loadMapper(Resources res) {
-        System.out.println(">>>>>>>>>>>>>");
         try {
-            mapper = new Mapper(res.getXml(R.xml.kbdmapping));
+            mapper = new Mapper(res.getXml(KBD_MAPPINGS[mKeyboardSwitcher.getKeyboardId()]));
         } catch (Exception ex) {
             mapper = null;
-            System.out.println("no kbd mapping for " + mLanguageSwitcher.getInputLanguage());
-            ex.printStackTrace();
+            System.out.println("no kbd mapping for " + mLanguageSwitcher.getInputLanguage() + "/" + mKeyboardSwitcher.getKeyboardId());
         }
-        System.out.println("<<<<<<<<<<<<<");
     }
 
     private void initSuggest(String locale) {
