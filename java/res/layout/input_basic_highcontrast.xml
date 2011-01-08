@@ -18,9 +18,9 @@
 */
 -->
 
-<org.apelikecoder.bulgariankeyboard.LatinKeyboardView
+<org.apelikecoder.bulgariankeyboard2.LatinKeyboardView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:latin="http://schemas.android.com/apk/res/org.apelikecoder.bulgariankeyboard"
+        xmlns:latin="http://schemas.android.com/apk/res/org.apelikecoder.bulgariankeyboard2"
 
         android:id="@+id/LatinkeyboardBaseView"
         android:layout_alignParentBottom="true"

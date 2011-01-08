@@ -1,8 +1,8 @@
--keep class org.apelikecoder.bulgariankeyboard.BinaryDictionary {
+-keep class org.apelikecoder.bulgariankeyboard2.BinaryDictionary {
   int mDictLength;
   <init>(...);
 }
 
--keep class org.apelikecoder.bulgariankeyboard.Suggest {
+-keep class org.apelikecoder.bulgariankeyboard2.Suggest {
   <init>(...);
 }

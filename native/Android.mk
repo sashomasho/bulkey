@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/src
 
 LOCAL_SRC_FILES := \
-	jni/org_apelikecoder_bulgariankeyboard_BinaryDictionary.cpp \
+	jni/org_apelikecoder_bulgariankeyboard2_BinaryDictionary.cpp \
 	src/dictionary.cpp \
 	src/char_utils.cpp
 

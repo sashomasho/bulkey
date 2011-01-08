@@ -21,6 +21,6 @@
 <!-- for the Input Method Manager. -->
 
 <input-method xmlns:android="http://schemas.android.com/apk/res/android"
-        android:settingsActivity="org.apelikecoder.bulgariankeyboard.IMESettings"
+        android:settingsActivity="org.apelikecoder.bulgariankeyboard2.IMESettings"
         android:isDefault="@bool/im_is_default"
 />

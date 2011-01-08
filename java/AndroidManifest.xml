@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="org.apelikecoder.bulgariankeyboard">
+        package="org.apelikecoder.bulgariankeyboard2">
 
     <application android:label="@string/english_ime_name"
             android:backupAgent="LatinIMEBackupAgent"
             android:killAfterRestore="false">
 
-        <service android:name="org.apelikecoder.bulgariankeyboard.LatinIME"
+        <service android:name="org.apelikecoder.bulgariankeyboard2.LatinIME"
                 android:label="@string/english_ime_name"
                 android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
@@ -21,17 +21,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="org.apelikecoder.bulgariankeyboard.LatinIMEDebugSettings" android:label="@string/english_ime_debug_settings">
+        <activity android:name="org.apelikecoder.bulgariankeyboard2.LatinIMEDebugSettings" android:label="@string/english_ime_debug_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
-        <activity android:name="org.apelikecoder.bulgariankeyboard.InputLanguageSelection"
+        <activity android:name="org.apelikecoder.bulgariankeyboard2.InputLanguageSelection"
                 android:label="@string/language_selection_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <action android:name="org.apelikecoder.bulgariankeyboard.INPUT_LANGUAGE_SELECTION"/>
+                <action android:name="org.apelikecoder.bulgariankeyboard2.INPUT_LANGUAGE_SELECTION"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

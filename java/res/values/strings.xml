@@ -19,7 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Title for Latin keyboard  -->
-    <string name="english_ime_name">Bulgarian keyboard</string>
+    <string name="english_ime_name">Bulgarian Keyboard 2</string>
     <!-- Title for Latin keyboard settings activity / dialog -->
     <string name="english_ime_settings">Settings</string>
     <!-- Title for Latin keyboard input options dialog -->
