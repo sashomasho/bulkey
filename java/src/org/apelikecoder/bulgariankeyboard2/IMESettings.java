@@ -83,6 +83,7 @@ public class IMESettings extends PreferenceActivity
         mVoiceModeOff = getString(R.string.voice_mode_off);
         mVoiceOn = !(prefs.getString(VOICE_SETTINGS_KEY, mVoiceModeOff).equals(mVoiceModeOff));
         mLogger = VoiceInputLogger.getLogger(this);
+        LatinIME.initDefaultLanguages(prefs);
     }
 
     @Override
@@ -309,8 +310,10 @@ public class IMESettings extends PreferenceActivity
         String locales = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, "");
         String[] localesArray = locales.split(",");
         ArrayList<Locale> result = new ArrayList<Locale>();
-        for (String l : localesArray)
-            result.add(new Locale(l.substring(0, 2), l.substring(3)));
+        for (String l : localesArray) {
+            if (l.length() == 5)
+                result.add(new Locale(l.substring(0, 2), l.substring(3)));
+        }
         return result;
     }
 }

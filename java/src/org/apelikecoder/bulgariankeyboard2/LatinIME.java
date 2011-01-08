@@ -340,6 +340,11 @@ public class LatinIME extends InputMethodService
         }
     };
 
+    public static void initDefaultLanguages(SharedPreferences sp) {
+        if (!sp.contains(PREF_SELECTED_LANGUAGES))
+            sp.edit().putString(PREF_SELECTED_LANGUAGES, "en_US,bg_BG,").commit();
+    }
+    
     @Override
     public void onCreate() {
         LatinImeLogger.init(this);
@@ -348,8 +353,7 @@ public class LatinIME extends InputMethodService
         mResources = getResources();
         final Configuration conf = mResources.getConfiguration();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.contains(PREF_SELECTED_LANGUAGES))
-            prefs.edit().putString(PREF_SELECTED_LANGUAGES, "en_US,bg_BG,").commit();
+        initDefaultLanguages(prefs);
         mLanguageSwitcher = new LanguageSwitcher(this);
         mLanguageSwitcher.loadLocales(prefs);
         mKeyboardSwitcher = new KeyboardSwitcher(this);
