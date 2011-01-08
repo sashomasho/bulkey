@@ -76,6 +76,13 @@
         <intent
                 android:action="org.apelikecoder.bulgariankeyboard.INPUT_LANGUAGE_SELECTION"/>
     </PreferenceScreen>
+    
+    <PreferenceScreen
+            android:title="@string/prefs_select_keyboad_mode_title"
+            android:summary="@string/prefs_select_keyboad_mode_summary"
+            android:key="select_keyboard_mode">
+    </PreferenceScreen>
+
 
     <PreferenceCategory
             android:title="@string/prediction_category"

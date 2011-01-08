@@ -376,4 +376,7 @@
     <!-- Title for Latin keyboard debug settings activity / dialog -->
     <string name="english_ime_debug_settings" translatable="false">Android keyboard Debug settings</string>
     <string name="prefs_debug_mode" translatable="false">Debug Mode</string>
+    <string name="prefs_select_keyboad_mode_title">Select keyboard mode</string>
+    <string name="prefs_select_keyboad_mode_summary">Choose different keyboard mode</string>
+    <string name="no_keyboard_modes_available">"No keyboad modes for selected keyboards"</string>
 </resources>

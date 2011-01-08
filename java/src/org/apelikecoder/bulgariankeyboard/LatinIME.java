@@ -16,8 +16,28 @@
 
 package org.apelikecoder.bulgariankeyboard;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apelikecoder.bulgariankeyboard.voice.FieldContext;
+import org.apelikecoder.bulgariankeyboard.voice.SettingsUtil;
+import org.apelikecoder.bulgariankeyboard.voice.VoiceInput;
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
@@ -37,18 +57,21 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.PrintWriterPrinter;
 import android.util.Printer;
-import android.view.*;
-import android.view.inputmethod.*;
+import android.view.HapticFeedbackConstants;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.CompletionInfo;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.ExtractedText;
+import android.view.inputmethod.ExtractedTextRequest;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import org.apelikecoder.bulgariankeyboard.voice.FieldContext;
-import org.apelikecoder.bulgariankeyboard.voice.SettingsUtil;
-import org.apelikecoder.bulgariankeyboard.voice.VoiceInput;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
 
 /**
  * Input method implementation for Qwerty'ish keyboard.
@@ -230,6 +253,7 @@ public class LatinIME extends InputMethodService
     private ArrayList<WordAlternatives> mWordHistory = new ArrayList<WordAlternatives>();
 
     private Mapper mapper;
+    private HardKeyboardState mHardKeyboard;
 
     private class VoiceResults {
         List<String> candidates;
@@ -324,6 +348,8 @@ public class LatinIME extends InputMethodService
         mResources = getResources();
         final Configuration conf = mResources.getConfiguration();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.contains(PREF_SELECTED_LANGUAGES))
+            prefs.edit().putString(PREF_SELECTED_LANGUAGES, "en_US,bg_BG,").commit();
         mLanguageSwitcher = new LanguageSwitcher(this);
         mLanguageSwitcher.loadLocales(prefs);
         mKeyboardSwitcher = new KeyboardSwitcher(this);
@@ -368,6 +394,7 @@ public class LatinIME extends InputMethodService
               });
         }
         prefs.registerOnSharedPreferenceChangeListener(this);
+        mHardKeyboard = new HardKeyboardState(this);
     }
 
     /**
@@ -518,6 +545,7 @@ public class LatinIME extends InputMethodService
             switchToRecognitionStatusView();
         }
         mConfigurationChanging = false;
+        mHardKeyboard.clearAllMetaStates();
     }
 
     @Override
@@ -720,6 +748,7 @@ public class LatinIME extends InputMethodService
         }
         if (mAutoDictionary != null) mAutoDictionary.flushPendingWrites();
         if (mUserBigramDictionary != null) mUserBigramDictionary.flushPendingWrites();
+        mHardKeyboard.clearAllMetaStates();
     }
 
     @Override
@@ -943,6 +972,16 @@ public class LatinIME extends InputMethodService
     }
 
     @Override
+    public boolean onEvaluateInputViewShown() { // XXX
+        // This is really a kludge, but it's the only place I found to clear
+        // the hardware keyboard meta states when the editor focus is lost 
+        // and then regained, so that the tracked meta states match
+        // the cursor caret indicator.
+        mHardKeyboard.clearAllMetaStates();
+        return super.onEvaluateInputViewShown();
+    }
+    
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
@@ -964,14 +1003,30 @@ public class LatinIME extends InputMethodService
                     return true;
                 }
                 break;
+            case KeyEvent.KEYCODE_SHIFT_LEFT:
+            case KeyEvent.KEYCODE_SHIFT_RIGHT:
+                mHardKeyboard.shiftMetaState(HardKeyboardState.META_SHIFT);
+                break;
+            case KeyEvent.KEYCODE_ALT_LEFT:
+            case KeyEvent.KEYCODE_ALT_RIGHT:
+                mHardKeyboard.shiftMetaState(HardKeyboardState.META_ALT);
+                break;
+            default:
+                if (mHardKeyboard.isMetaOn(HardKeyboardState.META_ALT)) {
+                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_ALT, false);
+                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, false);
+                    return false;
+                }
         }
         if (keyCode == KeyEvent.KEYCODE_SPACE && event.isShiftPressed()) {
             toggleLanguage(false, true);
+            getCurrentInputConnection().clearMetaKeyStates(KeyEvent.META_SHIFT_ON);
+            mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
             return true;
         }
         if (mapper != null) {
+            updateShiftKeyState(getCurrentInputEditorInfo());
             if (translateKeyDown(keyCode, event)) {
-                updateShiftKeyState(getCurrentInputEditorInfo());
                 return true;
             }
         }
@@ -1000,9 +1055,9 @@ public class LatinIME extends InputMethodService
                         shift_pressed = Character.isUpperCase(prev);
                     }
                 }
-                if (shift_pressed/* || mHardKeyboard.isMetaOn(HardKeyboardState.META_SHIFT)*/)
+                if (shift_pressed || mHardKeyboard.isMetaOn(HardKeyboardState.META_SHIFT))
                     c = Character.toUpperCase(c);
-                //mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
+                mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
                 sendKeyChar(c);
                 return true;
             }
@@ -1084,6 +1139,7 @@ public class LatinIME extends InputMethodService
 
     public void updateShiftKeyState(EditorInfo attr) {
         InputConnection ic = getCurrentInputConnection();
+        System.out.println("IS ALPHA " + mKeyboardSwitcher.isAlphabetMode() + " " + ic + " " + attr);
         if (ic != null && attr != null && mKeyboardSwitcher.isAlphabetMode()) {
             mKeyboardSwitcher.setShifted(mShiftKeyState.isMomentary() || mCapsLock
                     || getCursorCapsMode(ic, attr) != 0);

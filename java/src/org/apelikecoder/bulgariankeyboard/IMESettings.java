@@ -16,29 +16,41 @@
 
 package org.apelikecoder.bulgariankeyboard;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
+
+import org.apelikecoder.bulgariankeyboard.R;
+import org.apelikecoder.bulgariankeyboard.voice.SettingsUtil;
+import org.apelikecoder.bulgariankeyboard.voice.VoiceInputLogger;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.backup.BackupManager;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
+import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
 import android.text.AutoText;
 import android.util.Log;
-import org.apelikecoder.bulgariankeyboard.voice.SettingsUtil;
-import org.apelikecoder.bulgariankeyboard.voice.VoiceInputLogger;
-
-import java.util.ArrayList;
-import java.util.Locale;
+import android.widget.Toast;
 
 public class IMESettings extends PreferenceActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener,
-        DialogInterface.OnDismissListener {
+        DialogInterface.OnDismissListener, Preference.OnPreferenceClickListener{
 
+    private static final String SELECT_KEYBOARD_MODE = "select_keyboard_mode";
+    
     private static final String QUICK_FIXES_KEY = "quick_fixes";
     private static final String PREDICTION_SETTINGS_KEY = "prediction_settings";
     private static final String VOICE_SETTINGS_KEY = "voice_mode";
@@ -68,7 +80,7 @@ public class IMESettings extends PreferenceActivity
         mSettingsKeyPreference = (ListPreference) findPreference(PREF_SETTINGS_KEY);
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
         prefs.registerOnSharedPreferenceChangeListener(this);
-
+        findPreference(SELECT_KEYBOARD_MODE).setOnPreferenceClickListener(this);
         mVoiceModeOff = getString(R.string.voice_mode_off);
         mVoiceOn = !(prefs.getString(VOICE_SETTINGS_KEY, mVoiceModeOff).equals(mVoiceModeOff));
         mLogger = VoiceInputLogger.getLogger(this);
@@ -199,5 +211,107 @@ public class IMESettings extends PreferenceActivity
         } else {
             mLogger.voiceInputSettingDisabled();
         }
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference.getKey().equals(SELECT_KEYBOARD_MODE)) {
+            List<Locale> locales = getEnabledLocales();
+            final TreeMap<String, Locale> localesWithAlts = new TreeMap<String, Locale>();
+            for (Locale l : locales) {
+                Resources res = getLocaledResources(l);
+                boolean[] alts = getAlts(l);
+                if (alts[0] || alts[1])
+                    localesWithAlts.put(l.getDisplayLanguage(l), l);
+                restoreLocale(res);
+            }
+            if (localesWithAlts.isEmpty()) {
+                Toast.makeText(this, R.string.no_keyboard_modes_available, Toast.LENGTH_SHORT).show();
+            } else if (localesWithAlts.size() == 1) {
+                showKeyboardModesDialog(localesWithAlts.get(localesWithAlts.keySet().iterator().next()));
+            } else {
+                new AlertDialog.Builder(this).setItems(localesWithAlts.keySet().toArray(new String[]{}), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Collection<Locale> locales = localesWithAlts.values();
+                        int i = 0;
+                        for (Locale l : locales) {
+                            if (i++ == which)
+                                showKeyboardModesDialog(l);
+                        }
+                    }
+                }).create().show();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void showKeyboardModesDialog(final Locale locale) {
+        Resources res = getLocaledResources(locale);
+        String items[] = res.getStringArray(R.array.alt_keyboards_entries);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        restoreLocale(res);
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.dlg_select_keyboard)
+            .setSingleChoiceItems(items, prefs.getInt(locale.getLanguage(), 0), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    prefs.edit().putInt(locale.getLanguage(), i).commit();
+                    dialogInterface.dismiss();
+                }
+            })
+            .setCancelable(true)
+            .create()
+            .show();
+    }
+    
+    Locale saveLocale;
+    private Resources getLocaledResources(Locale locale) {
+        Resources res = getResources();
+        Configuration conf = res.getConfiguration();
+        saveLocale = conf.locale;
+        conf.locale = locale;
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+        return res;
+    }
+
+    private void restoreLocale(Resources res) {
+        Configuration conf = res.getConfiguration();
+        conf.locale = saveLocale;
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+        saveLocale = null;
+    }
+
+    private boolean[] getAlts(Locale locale) {
+        Resources res = getResources();
+        Configuration conf = res.getConfiguration();
+        Locale saveLocale = conf.locale;
+        boolean[] alts = new boolean[]{false, false};
+        conf.locale = locale;
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+        try {
+            res.getXml(R.xml.kbd_qwerty_alt);
+            alts[0] = true;
+        } catch (Resources.NotFoundException exz) {
+        }
+        try {
+            res.getXml(R.xml.kbd_qwerty_alt2);
+            alts[1] = true;
+        } catch (Resources.NotFoundException exz) {
+        }
+        conf.locale = saveLocale;
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+        return alts;
+    }
+
+    private List<Locale> getEnabledLocales() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String locales = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, "");
+        String[] localesArray = locales.split(",");
+        ArrayList<Locale> result = new ArrayList<Locale>();
+        for (String l : localesArray)
+            result.add(new Locale(l.substring(0, 2), l.substring(3)));
+        return result;
     }
 }

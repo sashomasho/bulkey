@@ -16,23 +16,26 @@
 
 package org.apelikecoder.bulgariankeyboard;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.preference.*;
-import android.text.TextUtils;
-import android.widget.Toast;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-public class InputLanguageSelection extends PreferenceActivity implements Preference.OnPreferenceClickListener {
+import org.apelikecoder.bulgariankeyboard.R;
+
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceGroup;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.widget.Toast;
+
+public class InputLanguageSelection extends PreferenceActivity {
 
     private String mSelectedLanguages;
     private ArrayList<Loc> mAvailableLanguages = new ArrayList<Loc>();
@@ -41,37 +44,6 @@ public class InputLanguageSelection extends PreferenceActivity implements Prefer
     };
 
     SharedPreferences prefs;
-
-    public boolean onPreferenceClick(Preference preference) {
-        PreferenceGroup parent = getPreferenceScreen();
-        int count = parent.getPreferenceCount();
-        for (int i = 0; i < count; i++) {
-            CheckBoxPreference pref = (CheckBoxPreference) parent.getPreference(i);
-            if (pref == preference && pref.isChecked()) {
-                //show chooser with the available alternative keyboards for this locale
-                final Locale locale = mAvailableLanguages.get(i).locale;
-                Resources res = getLocaledResources(locale);
-                boolean[] alts = getAlts(locale);
-                String items[] = res.getStringArray(R.array.alt_keyboards_entries);
-                if (alts[0] || alts[1]) {
-                    new AlertDialog.Builder(this)
-                        .setTitle(R.string.dlg_select_keyboard)
-                        .setSingleChoiceItems(items, prefs.getInt(locale.getLanguage(), 0), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                prefs.edit().putInt(locale.getLanguage(), i).commit();
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .setCancelable(false)
-                        .create()
-                        .show();
-                }
-                restoreLocale(res);
-            }
-        }
-
-        return false;
-    }
 
     private static class Loc implements Comparable<Object> {
         static Collator sCollator = Collator.getInstance();
@@ -110,7 +82,6 @@ public class InputLanguageSelection extends PreferenceActivity implements Prefer
             pref.setTitle(LanguageSwitcher.toTitleCase(locale.getDisplayName(locale)));
             boolean checked = isLocaleIn(locale, languageList);
             pref.setChecked(checked);
-            pref.setOnPreferenceClickListener(this);
             if (hasDictionary(locale)) {
                 pref.setSummary(R.string.has_dictionary);
             }
@@ -161,28 +132,6 @@ public class InputLanguageSelection extends PreferenceActivity implements Prefer
         return haveDictionary;
     }
 
-    private boolean[] getAlts(Locale locale) {
-        Resources res = getResources();
-        Configuration conf = res.getConfiguration();
-        Locale saveLocale = conf.locale;
-        boolean[] alts = new boolean[]{false, false};
-        conf.locale = locale;
-        res.updateConfiguration(conf, res.getDisplayMetrics());
-        try {
-            res.getXml(R.xml.kbd_qwerty_alt);
-            alts[0] = true;
-        } catch (Resources.NotFoundException exz) {
-        }
-        try {
-            res.getXml(R.xml.kbd_qwerty_alt2);
-            alts[1] = true;
-        } catch (Resources.NotFoundException exz) {
-        }
-        conf.locale = saveLocale;
-        res.updateConfiguration(conf, res.getDisplayMetrics());
-        return alts;
-    }
-
     private String get5Code(Locale locale) {
         String country = locale.getCountry();
         return locale.getLanguage()
@@ -218,7 +167,7 @@ public class InputLanguageSelection extends PreferenceActivity implements Prefer
     ArrayList<Loc> getUniqueLocales() {
         String[] locales = getAssets().getLocales();
         for (String s : locales)
-            System.out.println("LOCALE: " + s);
+            System.out.println(s);
         Arrays.sort(locales);
         ArrayList<Loc> uniqueLocales = new ArrayList<Loc>();
 
