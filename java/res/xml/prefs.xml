@@ -112,6 +112,15 @@
             android:defaultValue="@bool/enable_autocorrect"
             android:dependency="show_suggestions"
             />
+            
+        <CheckBoxPreference
+            android:title="@string/prefs_suggest_contact_names_title"
+            android:summary="@string/prefs_contact_list_names_for_suggestion_summary"
+            android:persistent="true"
+            android:dependency="quick_fixes"
+            android:defaultValue="true"
+            android:key="suggest_contact_names"/>            
+
     </PreferenceCategory>            
 
 </PreferenceScreen>

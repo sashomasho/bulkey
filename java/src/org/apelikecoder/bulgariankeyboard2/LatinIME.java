@@ -93,6 +93,7 @@ public class LatinIME extends InputMethodService
     private static final String PREF_AUTO_CAP = "auto_cap";
     private static final String PREF_QUICK_FIXES = "quick_fixes";
     private static final String PREF_SHOW_SUGGESTIONS = "show_suggestions";
+    private static final String PREF_SUGGEST_CONTACTS = "suggest_contact_names";
     private static final String PREF_AUTO_COMPLETE = "auto_complete";
     //private static final String PREF_BIGRAM_SUGGESTIONS = "bigram_suggestion";
     private static final String PREF_VOICE_MODE = "voice_mode";
@@ -254,6 +255,7 @@ public class LatinIME extends InputMethodService
 
     private Mapper mapper;
     private HardKeyboardState mHardKeyboard;
+    private boolean mSuggestContacts;
 
     private class VoiceResults {
         List<String> candidates;
@@ -470,13 +472,16 @@ public class LatinIME extends InputMethodService
         mQuickFixes = sp.getBoolean(PREF_QUICK_FIXES, true);
 
         int[] dictionaries = getDictionary(orig);
-        System.out.println("DICTS " + dictionaries.length);
+
         mSuggest = new Suggest(this, dictionaries);
         updateAutoTextEnabled(saveLocale);
         if (mUserDictionary != null) mUserDictionary.close();
         mUserDictionary = new UserDictionary(this, mInputLocale);
-        if (mContactsDictionary == null) {
-            mContactsDictionary = new ContactsDictionary(this, Suggest.DIC_CONTACTS);
+        if (mSuggestContacts) {
+            if (mContactsDictionary == null)
+                mContactsDictionary = new ContactsDictionary(this, Suggest.DIC_CONTACTS);
+        } else {
+            mContactsDictionary = null;
         }
         if (mAutoDictionary != null) {
             mAutoDictionary.close();
@@ -1143,7 +1148,6 @@ public class LatinIME extends InputMethodService
 
     public void updateShiftKeyState(EditorInfo attr) {
         InputConnection ic = getCurrentInputConnection();
-        System.out.println("IS ALPHA " + mKeyboardSwitcher.isAlphabetMode() + " " + ic + " " + attr);
         if (ic != null && attr != null && mKeyboardSwitcher.isAlphabetMode()) {
             mKeyboardSwitcher.setShifted(mShiftKeyState.isMomentary() || mCapsLock
                     || getCursorCapsMode(ic, attr) != 0);
@@ -2585,6 +2589,7 @@ public class LatinIME extends InputMethodService
         mLocaleSupportedForVoiceInput = voiceInputSupportedLocales.contains(mInputLocale);
 
         mShowSuggestions = sp.getBoolean(PREF_SHOW_SUGGESTIONS, true);
+        mSuggestContacts = sp.getBoolean(PREF_SUGGEST_CONTACTS, true);
 
         if (VOICE_INSTALLED) {
             final String voiceMode = sp.getString(PREF_VOICE_MODE,
