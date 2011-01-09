@@ -135,7 +135,7 @@
             android:keyLabel="б" />
         <Key
             android:codes="@integer/key_delete"
-            android:keyIcon="@drawable/sym_keyboard_delete"
+            android:keyIcon="@drawable/sym_keyboard_delete_small"
             android:iconPreview="@drawable/sym_keyboard_feedback_delete"
             android:isModifier="true"
             android:isRepeatable="true"
