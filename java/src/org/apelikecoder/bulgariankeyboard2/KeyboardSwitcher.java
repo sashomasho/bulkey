@@ -94,7 +94,7 @@ public class KeyboardSwitcher implements SharedPreferences.OnSharedPreferenceCha
         R.xml.kbd_qwerty_alt,
         R.xml.kbd_qwerty_alt2,
         R.xml.kbd_qwerty_black,
-        R.xml.kbd_qwerty_black, //TODO - alt_black
+        R.xml.kbd_qwerty_alt_black,
         R.xml.kbd_qwerty_alt2_black,
     };
 

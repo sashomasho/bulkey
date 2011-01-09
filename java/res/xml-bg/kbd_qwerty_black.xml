@@ -29,13 +29,13 @@
         android:rowEdgeFlags="top"
     >
         <Key
-            android:keyLabel="ч"
+            android:keyLabel="я"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="1"
             android:keyWidth="8.75%p"
             android:keyEdgeFlags="left" />
         <Key
-            android:keyLabel="ш"
+            android:keyLabel="в"
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="2" />
         <Key
@@ -71,7 +71,7 @@
             android:popupKeyboard="@xml/kbd_popup_template"
             android:popupCharacters="0" />
         <Key
-            android:keyLabel="я"
+            android:keyLabel="ч"
             android:keyWidth="8.75%p"
             android:keyEdgeFlags="right" />
     </Row>
@@ -99,9 +99,9 @@
         <Key
             android:keyLabel="л" />
         <Key
-            android:keyLabel="щ" />
+            android:keyLabel="ш" />
         <Key
-            android:keyLabel="ь"
+            android:keyLabel="щ"
             android:keyWidth="8.75%p"
             android:keyEdgeFlags="right" />
     </Row>
@@ -119,19 +119,17 @@
         <Key
             android:keyLabel="з" />
         <Key
-            android:keyLabel="ж" />
+            android:keyLabel="ь" />
         <Key
             android:keyLabel="ц" />
         <Key
-            android:keyLabel="в" />
+            android:keyLabel="ж" />
         <Key
             android:keyLabel="б" />
         <Key
             android:keyLabel="н" />
         <Key
-            android:keyLabel="м"
-            android:popupKeyboard="@xml/kbd_popup_template"
-            android:popupCharacters="@string/alternates_for_cyrillic_soft_sign" />
+            android:keyLabel="м" />
         <Key
             android:keyLabel="ю" />
         <Key
