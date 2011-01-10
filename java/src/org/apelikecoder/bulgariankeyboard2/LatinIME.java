@@ -1293,6 +1293,22 @@ public class LatinIME extends InputMethodService
             case LatinKeyboardView.KEYCODE_PREV_LANGUAGE:
                 toggleLanguage(false, false);
                 break;
+            case LatinKeyboardView.KEYCODE_LEFT:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
+                break;
+            case LatinKeyboardView.KEYCODE_DOWN:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
+                break;
+            case LatinKeyboardView.KEYCODE_UP:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
+                break;
+            case LatinKeyboardView.KEYCODE_RIGHT:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
+                break;
             case LatinKeyboardView.KEYCODE_VOICE:
                 if (VOICE_INSTALLED) {
                     startListening(false /* was a button press, was not a swipe */);

@@ -222,7 +222,7 @@ public class IMESettings extends PreferenceActivity
                 Resources res = getLocaledResources(l);
                 boolean[] alts = getAlts(l);
                 if (alts[0] || alts[1])
-                    localesWithAlts.put(l.getDisplayLanguage(l), l);
+                    localesWithAlts.put(l.getDisplayLanguage(), l);
                 restoreLocale(res);
             }
             if (localesWithAlts.isEmpty()) {
@@ -230,7 +230,9 @@ public class IMESettings extends PreferenceActivity
             } else if (localesWithAlts.size() == 1) {
                 showKeyboardModesDialog(localesWithAlts.get(localesWithAlts.keySet().iterator().next()));
             } else {
-                new AlertDialog.Builder(this).setItems(localesWithAlts.keySet().toArray(new String[]{}), new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(this)
+                    .setTitle(R.string.select_language)
+                    .setItems(localesWithAlts.keySet().toArray(new String[]{}), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

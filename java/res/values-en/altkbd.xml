@@ -1,0 +1,8 @@
+<resources>
+    <string name="kbd_qwerty">Standard</string>
+    <string name="kbd_qwerty_alt">Standard (with arrows)</string>
+    <string-array name="alt_keyboards_entries">
+        <item>@string/kbd_qwerty</item>
+        <item>@string/kbd_qwerty_alt</item>
+    </string-array>
+</resources>

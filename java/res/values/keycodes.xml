@@ -29,4 +29,8 @@
     <integer name="key_settings">-100</integer>
     <integer name="key_voice">-102</integer>
     <integer name="key_f1">-103</integer>
+    <integer name="key_left">-111</integer>
+    <integer name="key_down">-112</integer>
+    <integer name="key_up">-113</integer>
+    <integer name="key_right">-114</integer>
 </resources>

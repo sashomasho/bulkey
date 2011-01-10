@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="org.apelikecoder.bulgariankeyboard2">
+        package="org.apelikecoder.bulgariankeyboard2"
+        android:versionCode="2"
+        android:versionName="1.0.1"
+        >
 
     <application android:label="@string/english_ime_name"
             android:backupAgent="LatinIMEBackupAgent"
@@ -43,7 +46,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="9" />
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="9" />
 
     <supports-screens
         android:anyDensity="true"

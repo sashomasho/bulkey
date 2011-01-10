@@ -1,13 +1,12 @@
 <resources>
-    
     <string name="kbd_qwerty">Standard keyboard</string>
+<!--
     <string name="kbd_qwerty_alt">Alt. keyboard</string>
     <string name="kbd_qwerty_alt2">Alt keyboard 2</string>
-
+    -->
+    
     <string-array name="alt_keyboards_entries">
         <item>@string/kbd_qwerty</item>
-        <item>@string/kbd_qwerty_alt</item>
-        <item>@string/kbd_qwerty_alt2</item>
     </string-array>
 
     <string name="dlg_select_keyboard">Select keyboard</string>
