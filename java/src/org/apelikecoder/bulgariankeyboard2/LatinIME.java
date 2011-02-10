@@ -131,7 +131,6 @@ public class LatinIME extends InputMethodService
     private static final String PREF_RECORRECTION_ENABLED = "recorrection_enabled";
 
     private static final int MSG_UPDATE_SUGGESTIONS = 0;
-    private static final int MSG_START_TUTORIAL = 1;
     private static final int MSG_UPDATE_SHIFT_STATE = 2;
     private static final int MSG_VOICE_RESULTS = 3;
     private static final int MSG_UPDATE_OLD_SUGGESTIONS = 4;
@@ -229,8 +228,6 @@ public class LatinIME extends InputMethodService
     private ModifierKeyState mShiftKeyState = new ModifierKeyState();
     private ModifierKeyState mSymbolKeyState = new ModifierKeyState();
 
-    private Tutorial mTutorial;
-
     private AudioManager mAudioManager;
     // Align sound effect volume on music volume
     private final float FX_VOLUME = -1.0f;
@@ -319,18 +316,6 @@ public class LatinIME extends InputMethodService
                     break;
                 case MSG_UPDATE_OLD_SUGGESTIONS:
                     setOldSuggestions();
-                    break;
-                case MSG_START_TUTORIAL:
-                    if (mTutorial == null) {
-                        if (mKeyboardSwitcher.getInputView().isShown()) {
-                            mTutorial = new Tutorial(
-                                    LatinIME.this, mKeyboardSwitcher.getInputView());
-                            mTutorial.start();
-                        } else {
-                            // Try again soon if the view is not yet showing
-                            sendMessageDelayed(obtainMessage(MSG_START_TUTORIAL), 100);
-                        }
-                    }
                     break;
                 case MSG_UPDATE_SHIFT_STATE:
                     updateShiftKeyState(getCurrentInputEditorInfo());
@@ -710,7 +695,6 @@ public class LatinIME extends InputMethodService
         mPredictionOn = mPredictionOn && (mCorrectionMode > 0 || mShowSuggestions);
         // If we just entered a text field, maybe it has some old text that requires correction
         checkReCorrectionOnStart();
-        checkTutorial(attribute.privateImeOptions);
         if (TRACE) Debug.startMethodTracing("/data/trace/latinime");
     }
 
@@ -997,19 +981,7 @@ public class LatinIME extends InputMethodService
                 if (event.getRepeatCount() == 0 && mKeyboardSwitcher.getInputView() != null) {
                     if (mKeyboardSwitcher.getInputView().handleBack()) {
                         return true;
-                    } else if (mTutorial != null) {
-                        mTutorial.close();
-                        mTutorial = null;
                     }
-                }
-                break;
-            case KeyEvent.KEYCODE_DPAD_DOWN:
-            case KeyEvent.KEYCODE_DPAD_UP:
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                // If tutorial is visible, don't allow dpad to work
-                if (mTutorial != null) {
-                    return true;
                 }
                 break;
             case KeyEvent.KEYCODE_SHIFT_LEFT:
@@ -1081,10 +1053,6 @@ public class LatinIME extends InputMethodService
             case KeyEvent.KEYCODE_DPAD_UP:
             case KeyEvent.KEYCODE_DPAD_LEFT:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                // If tutorial is visible, don't allow dpad to work
-                if (mTutorial != null) {
-                    return true;
-                }
                 LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
                 // Enable shift key and DPAD to do selections
                 if (inputView != null && inputView.isShown()
@@ -1324,6 +1292,22 @@ public class LatinIME extends InputMethodService
                 break;
             case LatinKeyboardView.KEYCODE_PREV_LANGUAGE:
                 toggleLanguage(false, false);
+                break;
+            case LatinKeyboardView.KEYCODE_LEFT:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
+                break;
+            case LatinKeyboardView.KEYCODE_DOWN:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
+                break;
+            case LatinKeyboardView.KEYCODE_UP:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
+                break;
+            case LatinKeyboardView.KEYCODE_RIGHT:
+                getCurrentInputConnection()
+                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
                 break;
             case LatinKeyboardView.KEYCODE_VOICE:
                 if (VOICE_INSTALLED) {
@@ -2488,27 +2472,6 @@ public class LatinIME extends InputMethodService
                     HapticFeedbackConstants.KEYBOARD_TAP,
                     HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         }
-    }
-
-    private void checkTutorial(String privateImeOptions) {
-        if (privateImeOptions == null) return;
-        if (privateImeOptions.equals("com.android.setupwizard:ShowTutorial")) {
-            if (mTutorial == null) startTutorial();
-        } else if (privateImeOptions.equals("com.android.setupwizard:HideTutorial")) {
-            if (mTutorial != null) {
-                if (mTutorial.close()) {
-                    mTutorial = null;
-                }
-            }
-        }
-    }
-
-    private void startTutorial() {
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_START_TUTORIAL), 500);
-    }
-
-    /* package */ void tutorialDone() {
-        mTutorial = null;
     }
 
     /* package */ void promoteToUserDictionary(String word, int frequency) {

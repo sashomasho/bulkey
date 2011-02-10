@@ -820,8 +820,11 @@ public class LatinKeyboard extends Keyboard {
     private int getTextSizeFromTheme(int style, int defValue) {
         TypedArray array = mContext.getTheme().obtainStyledAttributes(
                 style, new int[] { android.R.attr.textSize });
-        int textSize = array.getDimensionPixelSize(array.getResourceId(0, 0), defValue);
-        return textSize;
+        try {
+            return array.getDimensionPixelSize(array.getResourceId(0, 0), defValue);
+        } catch (IndexOutOfBoundsException ex) { //HTC LEGEND THROWS AN EXCEPTION
+            return defValue;
+        }
     }
 
     // TODO LatinKey could be static class
