@@ -1,0 +1,43 @@
+<Row
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyboardMode="@+id/mode_arrows"><!--
+    FIXME
+    most of the properties should be set to the row and read from there
+    sadly the current implementation doesn't manage with this problem, so
+    all key settings are copy/pasted below
+    --><Key
+        android:keyLabel="@string/left_arrow"
+        android:isRepeatable="true"
+        android:codes="@integer/key_left"
+        android:keyEdgeFlags="left"
+        android:keyHeight="@dimen/arrow_row_height"
+        android:keyWidth="25%p"
+        android:isModifier="true"
+         />
+    <Key
+        android:keyLabel="@string/down_arrow"
+        android:isRepeatable="true"
+        android:codes="@integer/key_down"
+        android:keyHeight="@dimen/arrow_row_height"
+        android:keyWidth="25%p"
+        android:isModifier="true"
+         />
+    <Key
+        android:keyLabel="@string/up_arrow"
+        android:isRepeatable="true"
+        android:codes="@integer/key_up"
+        android:keyHeight="@dimen/arrow_row_height"
+        android:keyWidth="25%p" 
+        android:isModifier="true"
+        />
+
+    <Key
+        android:keyLabel="@string/right_arrow"
+        android:isRepeatable="true"
+        android:codes="@integer/key_right"
+        android:keyEdgeFlags="right"
+        android:keyHeight="@dimen/arrow_row_height"
+        android:keyWidth="25%p" 
+        android:isModifier="true"
+        />
+</Row>

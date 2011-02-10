@@ -309,7 +309,7 @@ public class KeyboardSwitcher implements SharedPreferences.OnSharedPreferenceCha
             Locale saveLocale = conf.locale;
             conf.locale = mInputLocale;
             orig.updateConfiguration(conf, null);
-            keyboard = new LatinKeyboard(mInputMethodService, id.mXml, id.mKeyboardMode);
+            keyboard = new MyKeyboard(mInputMethodService, id.mXml, id.mKeyboardMode, mInputMethodService.shouldShowArrows());
             keyboard.setVoiceMode(hasVoiceButton(id.mXml == R.xml.kbd_symbols
                     || id.mXml == R.xml.kbd_symbols_black), mHasVoice);
             keyboard.setLanguageSwitcher(mLanguageSwitcher, mIsAutoCompletionActive, isBlackSym());

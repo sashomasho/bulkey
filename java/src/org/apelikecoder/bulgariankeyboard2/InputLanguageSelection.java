@@ -19,7 +19,9 @@ package org.apelikecoder.bulgariankeyboard2;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
+import java.util.TreeSet;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -162,10 +164,8 @@ public class InputLanguageSelection extends PreferenceActivity {
 
     ArrayList<Loc> getUniqueLocales() {
         String[] locales = getAssets().getLocales();
-        for (String s : locales)
-            System.out.println(s);
         Arrays.sort(locales);
-        ArrayList<Loc> uniqueLocales = new ArrayList<Loc>();
+        Collection<Loc> uniqueLocales = new TreeSet<Loc>();
 
         final int origSize = locales.length;
         Loc[] preprocess = new Loc[origSize];
@@ -214,7 +214,7 @@ public class InputLanguageSelection extends PreferenceActivity {
         for (int i = 0; i < finalSize ; i++) {
             uniqueLocales.add(preprocess[i]);
         }
-        return uniqueLocales;
+        return new ArrayList<InputLanguageSelection.Loc>(uniqueLocales);
     }
 
     private boolean arrayContains(String[] array, String value) {

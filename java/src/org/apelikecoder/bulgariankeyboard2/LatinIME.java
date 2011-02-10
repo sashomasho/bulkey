@@ -72,6 +72,7 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * Input method implementation for Qwerty'ish keyboard.
@@ -87,6 +88,7 @@ public class LatinIME extends InputMethodService
     static final boolean VOICE_INSTALLED = true;
     static final boolean ENABLE_VOICE_BUTTON = true;
 
+    private static final String PREF_SHOW_ARROWS = "show_arrows";
     private static final String PREF_VIBRATE_ON = "vibrate_on";
     private static final String PREF_SOUND_ON = "sound_on";
     private static final String PREF_POPUP_ON = "popup_on";
@@ -197,6 +199,7 @@ public class LatinIME extends InputMethodService
     private boolean mCapsLock;
     private boolean mPasswordText;
     private boolean mVibrateOn;
+    private boolean mArrowsEnabled, mShowArrows;
     private boolean mSoundOn;
     private boolean mPopupOn;
     private boolean mAutoCap;
@@ -993,14 +996,16 @@ public class LatinIME extends InputMethodService
                 mHardKeyboard.shiftMetaState(HardKeyboardState.META_ALT);
                 break;
             default:
-                if (mHardKeyboard.isMetaOn(HardKeyboardState.META_ALT)) {
-                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_ALT, false);
-                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, false);
-                    return false;
-                }
+                //if (mHardKeyboard.isMetaOn(HardKeyboardState.META_ALT)) {
+                //    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_ALT, false);
+                //    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, false);
+                //   return false;
+               // }
+                break;
         }
         if (keyCode == KeyEvent.KEYCODE_SPACE && event.isShiftPressed()) {
             toggleLanguage(false, true);
+            Toast.makeText(this, mLanguageSwitcher.getInputLanguage(), Toast.LENGTH_SHORT).show();
             getCurrentInputConnection().clearMetaKeyStates(KeyEvent.META_SHIFT_ON);
             mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
             return true;
@@ -1294,20 +1299,16 @@ public class LatinIME extends InputMethodService
                 toggleLanguage(false, false);
                 break;
             case LatinKeyboardView.KEYCODE_LEFT:
-                getCurrentInputConnection()
-                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
+                sendKeyDownEvent(KeyEvent.KEYCODE_DPAD_LEFT);
                 break;
             case LatinKeyboardView.KEYCODE_DOWN:
-                getCurrentInputConnection()
-                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
+                sendKeyDownEvent(KeyEvent.KEYCODE_DPAD_DOWN);
                 break;
             case LatinKeyboardView.KEYCODE_UP:
-                getCurrentInputConnection()
-                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
+                sendKeyDownEvent(KeyEvent.KEYCODE_DPAD_UP);
                 break;
             case LatinKeyboardView.KEYCODE_RIGHT:
-                getCurrentInputConnection()
-                    .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
+                sendKeyDownEvent(KeyEvent.KEYCODE_DPAD_RIGHT);
                 break;
             case LatinKeyboardView.KEYCODE_VOICE:
                 if (VOICE_INSTALLED) {
@@ -1338,6 +1339,12 @@ public class LatinIME extends InputMethodService
         mEnteredText = null;
     }
 
+    private void sendKeyDownEvent(int keyCode) {
+        InputConnection conn = getCurrentInputConnection();
+        if (conn != null)
+            conn.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyCode));
+
+    }
     public void onText(CharSequence text) {
         if (VOICE_INSTALLED && mVoiceInputHighlighted) {
             commitVoiceInput();
@@ -2358,11 +2365,20 @@ public class LatinIME extends InputMethodService
     }
 
     public void swipeDown() {
-        handleClose();
+        if (mArrowsEnabled && mShowArrows) {
+            mShowArrows = false;
+            toggleLanguage(true, false);
+        } else {
+            handleClose();
+        }
     }
 
     public void swipeUp() {
         //launchSettings();
+        if (mArrowsEnabled) {
+            mShowArrows = true;
+            toggleLanguage(true, false);
+        }
     }
 
     public void onPress(int primaryCode) {
@@ -2528,6 +2544,7 @@ public class LatinIME extends InputMethodService
         // Get the settings preferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         mVibrateOn = sp.getBoolean(PREF_VIBRATE_ON, false);
+        mArrowsEnabled = sp.getBoolean(PREF_SHOW_ARROWS, false);
         mSoundOn = sp.getBoolean(PREF_SOUND_ON, false);
         mPopupOn = sp.getBoolean(PREF_POPUP_ON,
                 mResources.getBoolean(R.bool.default_popup_preview));
@@ -2682,5 +2699,9 @@ public class LatinIME extends InputMethodService
 
     public void onAutoCompletionStateChanged(boolean isAutoCompletion) {
         mKeyboardSwitcher.onAutoCompletionStateChanged(isAutoCompletion);
+    }
+    
+    public boolean shouldShowArrows() {
+        return mShowArrows;
     }
 }

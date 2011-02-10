@@ -83,6 +83,10 @@
             android:key="select_keyboard_mode">
     </PreferenceScreen>
 
+    <CheckBoxPreference
+        android:title="Enable Arrows"
+        android:summary="Enable SwipeUp/SwipeDown to show/hide arrow row"
+        android:key="show_arrows"/>
 
     <PreferenceCategory
             android:title="@string/prediction_category"

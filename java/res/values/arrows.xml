@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="left_arrow">◀</string>
+    <string name="right_arrow">▶</string>
+    <string name="up_arrow">▲</string>
+    <string name="down_arrow">▼</string>
+</resources>
