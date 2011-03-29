@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <RelativeLayout
+        android:id="@+id/tab1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/test_area">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:text="@string/some_thoughful_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp" />
+                <Button
+                    android:id="@+id/btnGoToSettings"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigate_settings" />
+                <Button
+                    android:id="@+id/btnInputMethod"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigate_input_method" />
+            </LinearLayout>
+        </ScrollView>
+        <EditText
+            android:id="@+id/test_area"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:hint="Test here..."
+            android:singleLine="true"
+            android:imeOptions="actionDone" />
+    </RelativeLayout>
+    <ScrollView
+        android:id="@+id/tab2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:text="@string/more_info"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold" />
+            <TextView
+                android:text="@string/more_info_link"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:textStyle="bold" />
+            <TextView
+                android:text="@string/more_problems"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:textStyle="bold"
+                 />
+            <TextView
+                android:text="@string/more_problems_link"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/versionInfo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:layout_marginTop="20dip"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/hwKeyboardTips"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:textStyle="bold"
+                android:text="@string/hwKeyboardInfo" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
