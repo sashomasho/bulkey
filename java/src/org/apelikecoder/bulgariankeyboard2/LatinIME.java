@@ -48,6 +48,7 @@ import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
@@ -89,7 +90,7 @@ public class LatinIME extends InputMethodService
     static final boolean ENABLE_VOICE_BUTTON = true;
 
     private static final String PREF_SHOW_ARROWS = "show_arrows";
-    private static final String PREF_VIBRATE_ON = "vibrate_on";
+    private static final String PREF_VIBRATE_ON = "vibrate_on2";
     private static final String PREF_SOUND_ON = "sound_on";
     private static final String PREF_POPUP_ON = "popup_on";
     private static final String PREF_AUTO_CAP = "auto_cap";
@@ -198,7 +199,7 @@ public class LatinIME extends InputMethodService
     // TODO move this state variable outside LatinIME
     private boolean mCapsLock;
     private boolean mPasswordText;
-    private boolean mVibrateOn;
+    private int mVibrateOn;
     private boolean mArrowsEnabled, mShowArrows;
     private boolean mSoundOn;
     private boolean mPopupOn;
@@ -256,6 +257,7 @@ public class LatinIME extends InputMethodService
     private Mapper mapper;
     private HardKeyboardState mHardKeyboard;
     private boolean mSuggestContacts;
+    private Vibrator mVibrator;
 
     private class VoiceResults {
         List<String> candidates;
@@ -389,6 +391,7 @@ public class LatinIME extends InputMethodService
         }
         prefs.registerOnSharedPreferenceChangeListener(this);
         mHardKeyboard = new HardKeyboardState(this);
+        mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
     }
 
     /**
@@ -2480,13 +2483,16 @@ public class LatinIME extends InputMethodService
     }
 
     private void vibrate() {
-        if (!mVibrateOn) {
+        if (mVibrateOn == 0) {
             return;
         }
         if (mKeyboardSwitcher.getInputView() != null) {
-            mKeyboardSwitcher.getInputView().performHapticFeedback(
-                    HapticFeedbackConstants.KEYBOARD_TAP,
+            if (mVibrateOn == 1)
+                mKeyboardSwitcher.getInputView().performHapticFeedback(
+                    HapticFeedbackConstants.KEYBOARD_TAP, 
                     HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            else
+                mVibrator.vibrate(40);
         }
     }
 
@@ -2543,7 +2549,7 @@ public class LatinIME extends InputMethodService
     private void loadSettings() {
         // Get the settings preferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        mVibrateOn = sp.getBoolean(PREF_VIBRATE_ON, false);
+        mVibrateOn = Integer.valueOf(sp.getString(PREF_VIBRATE_ON, getString(R.string.vibration_mode_none)));
         mArrowsEnabled = sp.getBoolean(PREF_SHOW_ARROWS, false);
         mSoundOn = sp.getBoolean(PREF_SOUND_ON, false);
         mPopupOn = sp.getBoolean(PREF_POPUP_ON,

@@ -32,4 +32,8 @@
     <string name="settings_key_mode_always_show" translatable="false">1</string>
     <!-- Always hide the settings key -->
     <string name="settings_key_mode_always_hide" translatable="false">2</string>
+
+    <string name="vibration_mode_none" translatable="false">0</string>
+    <string name="vibration_mode_soft" translatable="false">1</string>
+    <string name="vibration_mode_hard" translatable="false">2</string>
 </resources>

@@ -382,4 +382,18 @@
     <string name="no_keyboard_modes_available">"No keyboad modes for selected keyboards"</string>
     <string name="prefs_suggest_contact_names_title">Suggest contact names</string>
     <string name="prefs_contact_list_names_for_suggestion_summary">Show contact list names for suggestion</string>
+    <string-array name="vibration_mode_values" translatable="false">
+        <item>@string/vibration_mode_none</item>
+        <item>@string/vibration_mode_soft</item>
+        <item>@string/vibration_mode_hard</item>
+    </string-array>
+
+    <string name="vibration_mode_none_name">None</string>
+    <string name="vibration_mode_soft_name">Standard</string>
+    <string name="vibration_mode_hard_name">Long</string>
+    <string-array name="vibration_mode_names">
+        <item>@string/vibration_mode_none_name</item>
+        <item>@string/vibration_mode_soft_name</item>
+        <item>@string/vibration_mode_hard_name</item>
+    </string-array>
 </resources>
