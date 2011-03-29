@@ -2708,6 +2708,6 @@ public class LatinIME extends InputMethodService
     }
     
     public boolean shouldShowArrows() {
-        return mShowArrows;
+        return mArrowsEnabled && mShowArrows;
     }
 }
