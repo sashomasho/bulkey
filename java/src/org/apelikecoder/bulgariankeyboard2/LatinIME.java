@@ -999,25 +999,25 @@ public class LatinIME extends InputMethodService
                 mHardKeyboard.shiftMetaState(HardKeyboardState.META_ALT);
                 break;
             default:
-                //if (mHardKeyboard.isMetaOn(HardKeyboardState.META_ALT)) {
-                //    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_ALT, false);
-                //    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, false);
-                //   return false;
-               // }
+                if (mHardKeyboard.isMetaOn(HardKeyboardState.META_ALT)) {
+                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_ALT, false);
+                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, false);
+                    return false;
+                }
+                if (keyCode == KeyEvent.KEYCODE_SPACE && event.isShiftPressed()) {
+                    toggleLanguage(false, true);
+                    Toast.makeText(this, new Locale(mLanguageSwitcher.getInputLanguage()).getDisplayLanguage(), Toast.LENGTH_SHORT).show();
+                    getCurrentInputConnection().clearMetaKeyStates(KeyEvent.META_SHIFT_ON);
+                    mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
+                    return true;
+                }
+                if (mapper != null) {
+                    if (!event.isAltPressed() && translateKeyDown(keyCode, event)) {
+                        updateShiftKeyState(getCurrentInputEditorInfo());
+                        return true;
+                    }
+                }
                 break;
-        }
-        if (keyCode == KeyEvent.KEYCODE_SPACE && event.isShiftPressed()) {
-            toggleLanguage(false, true);
-            Toast.makeText(this, mLanguageSwitcher.getInputLanguage(), Toast.LENGTH_SHORT).show();
-            getCurrentInputConnection().clearMetaKeyStates(KeyEvent.META_SHIFT_ON);
-            mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
-            return true;
-        }
-        if (mapper != null) {
-            updateShiftKeyState(getCurrentInputEditorInfo());
-            if (translateKeyDown(keyCode, event)) {
-                return true;
-            }
         }
         return super.onKeyDown(keyCode, event);
     }
