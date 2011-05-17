@@ -96,6 +96,7 @@ public class LatinIME extends InputMethodService
     private static final String PREF_QUICK_FIXES = "quick_fixes";
     private static final String PREF_SHOW_SUGGESTIONS = "show_suggestions";
     private static final String PREF_SUGGEST_CONTACTS = "suggest_contact_names";
+    private static final String PREF_AUTO_SWITCH_KEYBOARD = "auto_switch_symbols_keyboard";
     private static final String PREF_AUTO_COMPLETE = "auto_complete";
     //private static final String PREF_BIGRAM_SUGGESTIONS = "bigram_suggestion";
     private static final String PREF_VOICE_MODE = "voice_mode";
@@ -204,6 +205,7 @@ public class LatinIME extends InputMethodService
     private boolean mPopupOn;
     private boolean mAutoCap;
     private boolean mQuickFixes;
+    private boolean mAutoSwitchAlphaKeyboard;
     private boolean mHasUsedVoiceInput;
     private boolean mHasUsedVoiceInputUnsupportedLocale;
     private boolean mLocaleSupportedForVoiceInput;
@@ -1332,7 +1334,7 @@ public class LatinIME extends InputMethodService
                 // Cancel the just reverted state
                 mJustRevertedSeparator = null;
         }
-        if (mKeyboardSwitcher.onKey(primaryCode)) {
+        if (mAutoSwitchAlphaKeyboard && mKeyboardSwitcher.onKey(primaryCode)) {
             changeKeyboardMode();
         }
         // Reset after any single keystroke
@@ -2570,6 +2572,7 @@ public class LatinIME extends InputMethodService
 
         mShowSuggestions = sp.getBoolean(PREF_SHOW_SUGGESTIONS, true);
         mSuggestContacts = sp.getBoolean(PREF_SUGGEST_CONTACTS, true);
+        mAutoSwitchAlphaKeyboard = sp.getBoolean(PREF_AUTO_SWITCH_KEYBOARD, true);
 
         if (VOICE_INSTALLED) {
             final String voiceMode = sp.getString(PREF_VOICE_MODE,

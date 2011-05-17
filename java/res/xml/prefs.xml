@@ -88,6 +88,13 @@
         android:summary="Enable SwipeUp/SwipeDown to show/hide arrow row"
         android:key="show_arrows"/>
 
+    <CheckBoxPreference
+        android:key="auto_switch_symbols_keyboard"
+        android:title="Auto-switch keyboard"
+        android:summary="Auto-switch to alpha keyboard if space/enter is pressed"
+        android:persistent="true"
+        android:defaultValue="true"
+        />
     <PreferenceCategory
             android:title="@string/prediction_category"
             android:key="prediction_settings">
