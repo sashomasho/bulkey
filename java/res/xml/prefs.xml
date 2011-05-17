@@ -18,10 +18,13 @@
         android:title="@string/english_ime_settings"
         android:key="english_ime_settings">
 
-    <CheckBoxPreference
-            android:key="vibrate_on"
+    <ListPreference
+            android:key="vibrate_on2"
             android:title="@string/vibrate_on_keypress"
             android:persistent="true"
+            android:entryValues="@array/vibration_mode_values"
+            android:entries="@array/vibration_mode_names"
+            android:defaultValue="@string/vibration_mode_none"
             />
 
     <CheckBoxPreference

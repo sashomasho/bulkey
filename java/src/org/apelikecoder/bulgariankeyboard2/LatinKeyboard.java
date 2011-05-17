@@ -34,6 +34,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
+import android.os.Build;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.ViewConfiguration;
@@ -119,9 +120,23 @@ public class LatinKeyboard extends Keyboard {
         this(context, xmlLayoutResId, 0);
     }
 
+    private void correctDPI(Resources res) {
+        if ("motorola".equalsIgnoreCase(Build.MANUFACTURER)) {
+            if ("Milestone".equalsIgnoreCase(android.os.Build.MODEL)
+                    || "Droid".equalsIgnoreCase(android.os.Build.MODEL)) {
+                res.getDisplayMetrics().xdpi = 264;
+                res.getDisplayMetrics().ydpi = 264;
+            } else if ("DroidX".equalsIgnoreCase(android.os.Build.MODEL)) {
+                res.getDisplayMetrics().xdpi = 240;
+                res.getDisplayMetrics().ydpi = 240;
+            }
+        }
+    }
+
     public LatinKeyboard(Context context, int xmlLayoutResId, int mode) {
         super(context, xmlLayoutResId, mode);
         final Resources res = context.getResources();
+        correctDPI(res);
         mContext = context;
         mMode = mode;
         mRes = res;
@@ -172,6 +187,7 @@ public class LatinKeyboard extends Keyboard {
     @Override
     protected Key createKeyFromXml(Resources res, Row parent, int x, int y, 
             XmlResourceParser parser) {
+        //correctDPI(res);
         Key key = new LatinKey(res, parent, x, y, parser);
         switch (key.codes[0]) {
         case LatinIME.KEYCODE_ENTER:
