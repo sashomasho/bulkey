@@ -21,7 +21,7 @@
 <Keyboard
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="10%p"
-    android:horizontalGap="0px"
+    android:horizontalGap="@dimen/key_hgap"
     android:verticalGap="@dimen/key_bottom_gap"
     android:keyHeight="@dimen/key_height"
 >
