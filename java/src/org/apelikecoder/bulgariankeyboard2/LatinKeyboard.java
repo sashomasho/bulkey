@@ -89,6 +89,7 @@ public class LatinKeyboard extends Keyboard {
     private int mPrefLetterX;
     private int mPrefLetterY;
     private int mPrefDistance;
+    private boolean mChangeEnterKeyLabel;
 
     // TODO: generalize for any keyboardId
     private boolean mIsBlackSym;
@@ -118,6 +119,7 @@ public class LatinKeyboard extends Keyboard {
 
     public LatinKeyboard(Context context, int xmlLayoutResId) {
         this(context, xmlLayoutResId, 0);
+        mChangeEnterKeyLabel = context.getResources().getBoolean(R.bool.change_enter_key_label);
     }
 
     private void correctDPI(Resources res) {
@@ -227,7 +229,7 @@ public class LatinKeyboard extends Keyboard {
     void setImeOptions(Resources res, int mode, int options) {
         mMode = mode;
         // TODO should clean up this method
-        if (mEnterKey != null) {
+        if (mEnterKey != null && mChangeEnterKeyLabel) {
             // Reset some of the rarely used attributes.
             mEnterKey.popupCharacters = null;
             mEnterKey.popupResId = 0;
