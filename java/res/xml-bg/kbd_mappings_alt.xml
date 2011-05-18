@@ -28,7 +28,7 @@
     <key name="g" value="ж"/>
     <key name="h" value="г"/>
     <key name="i" value="с"/>
-    <key name="j" value="с"/>
+    <key name="j" value="т"/>
     <key name="k" value="н"/>
     <key name="l" value="в"/>
     <key name="m" value="п"/>
@@ -46,8 +46,16 @@
     <key name="y" value="щ"/>
     <key name="z" value="ю"/>
     <key name="," value="р"/>
-    <key name="." value="б"/>
-    <key name="\@" value="л"/>
+    <key name="." value="л"/>
+    <key name="\@" value="м"/>
+    <key name="[" value="ш"/>
+    <key name="]" value=";"/>
+    <key name="\\" value="ю"/>
+    <key name="'" value="ч"/>
+    <key name=";" value="м"/>
+    <key name="[" value="ц"/>
+    <key name="/" value="б"/>
+
     <compose name=",," value="."/>
     <compose name="цц" value="ч"/>
 </mapping>

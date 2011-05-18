@@ -46,6 +46,10 @@
     <key name="y" value="ъ"/>
     <key name="z" value="з"/>
     <key name="\@" value="я"/>
+    <key name="[" value="я"/>
+    <key name="]" value="щ"/>
+    <key name="\\" value="ь"/>
+    <key name="`" value="ю"/>
     <compose name="ъъ" value="ь"/>
     <compose name="сх" value="ш"/>
     <compose name="шт" value="щ"/>
