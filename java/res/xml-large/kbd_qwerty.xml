@@ -116,7 +116,7 @@
             android:codes="@integer/key_shift"
             android:keyIcon="@drawable/sym_keyboard_shift"
             android:iconPreview="@drawable/sym_keyboard_feedback_shift"
-            android:keyWidth="17%p"
+            android:keyWidth="15%p"
             android:isModifier="true"
             android:isSticky="true"
             android:keyEdgeFlags="left" />
@@ -149,7 +149,7 @@
             android:codes="@integer/key_shift"
             android:keyIcon="@drawable/sym_keyboard_shift"
             android:iconPreview="@drawable/sym_keyboard_feedback_shift"
-            android:keyWidth="8%p"
+            android:keyWidth="10%p"
             android:isModifier="true"
             android:isSticky="true"
             android:keyEdgeFlags="right" />
