@@ -34,6 +34,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -41,6 +42,7 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.speech.SpeechRecognizer;
 import android.text.AutoText;
+import android.text.InputType;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -53,6 +55,7 @@ public class IMESettings extends PreferenceActivity
     private static final String QUICK_FIXES_KEY = "quick_fixes";
     private static final String PREDICTION_SETTINGS_KEY = "prediction_settings";
     private static final String VOICE_SETTINGS_KEY = "voice_mode";
+    public static final String DPI_KEY = "dpi";
     /* package */ static final String PREF_SETTINGS_KEY = "settings_key";
 
     private static final String TAG = "IMESettings";
@@ -74,6 +77,7 @@ public class IMESettings extends PreferenceActivity
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.prefs);
+        ((EditTextPreference)findPreference(DPI_KEY)).getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
         mQuickFixes = (CheckBoxPreference) findPreference(QUICK_FIXES_KEY);
         mVoicePreference = (ListPreference) findPreference(VOICE_SETTINGS_KEY);
         mSettingsKeyPreference = (ListPreference) findPreference(PREF_SETTINGS_KEY);
@@ -118,6 +122,8 @@ public class IMESettings extends PreferenceActivity
                     .equals(mVoiceModeOff)) {
                 showVoiceConfirmation();
             }
+        } else if (key.equals(DPI_KEY)) {
+            Toast.makeText(this, "You may need to switch the layout, so the change can take effect", Toast.LENGTH_LONG).show();
         }
         mVoiceOn = !(prefs.getString(VOICE_SETTINGS_KEY, mVoiceModeOff).equals(mVoiceModeOff));
         updateVoiceModeSummary();

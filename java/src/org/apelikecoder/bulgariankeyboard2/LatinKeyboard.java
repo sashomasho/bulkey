@@ -35,6 +35,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.ViewConfiguration;
@@ -123,7 +124,12 @@ public class LatinKeyboard extends Keyboard {
     }
 
     private void correctDPI(Resources res) {
-        if ("motorola".equalsIgnoreCase(Build.MANUFACTURER)) {
+        int dpi = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString(IMESettings.DPI_KEY, "-1"));
+        if (dpi > 0) {
+            res.getDisplayMetrics().xdpi = dpi;
+            res.getDisplayMetrics().ydpi = dpi;
+        } else if ("motorola".equalsIgnoreCase(Build.MANUFACTURER)) {
             if ("Milestone".equalsIgnoreCase(android.os.Build.MODEL)
                     || "Droid".equalsIgnoreCase(android.os.Build.MODEL)) {
                 res.getDisplayMetrics().xdpi = 264;
@@ -138,8 +144,8 @@ public class LatinKeyboard extends Keyboard {
     public LatinKeyboard(Context context, int xmlLayoutResId, int mode) {
         super(context, xmlLayoutResId, mode);
         final Resources res = context.getResources();
-        correctDPI(res);
         mContext = context;
+        correctDPI(res);
         mMode = mode;
         mRes = res;
         mShiftLockIcon = res.getDrawable(R.drawable.sym_keyboard_shift_locked);

@@ -136,4 +136,16 @@
 
     </PreferenceCategory>            
 
+    <PreferenceCategory
+            android:title="@string/prefs_category_workaround"
+            android:key="workaround_settings">
+
+        <EditTextPreference
+            android:title="@string/prefs_override_dpi_value_title"
+            android:summary="@string/prefs_override_dpi_value_summary"
+            android:persistent="true"
+            android:defaultValue="-1"
+            android:key="dpi"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

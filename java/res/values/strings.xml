@@ -432,5 +432,8 @@
 &#160;&#160;&#160;&#160;y + y = ь\n
     </string>
     <string name="some_thoughful_text">Step 1 - Press the first button to go to system settings and enable Bulgarian Keyboard 2.\n\nStep 2 - Pressing the second button will allow you to activate it.\n\nStep 3 - Start writing.</string>
+    <string name="prefs_category_workaround">Workaround</string>
+    <string name="prefs_override_dpi_value_title">Override DPI Value</string>
+    <string name="prefs_override_dpi_value_summary">Some devices report wrong DPI value which may result in keyboard rendered too small, typical values are 120, 160 and 240. Try it, this should fix it.</string>
 
 </resources>
