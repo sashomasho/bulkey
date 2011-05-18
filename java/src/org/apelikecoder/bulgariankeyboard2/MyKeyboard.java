@@ -9,6 +9,7 @@ import android.util.Log;
 public class MyKeyboard extends LatinKeyboard {
     
     private static final String TAG_KEY = "Key";
+    public static final int NEXT_KEYBOARD = -12;
 
     private int extraheight;
 

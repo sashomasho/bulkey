@@ -1039,7 +1039,7 @@ public class LatinIME extends InputMethodService
                     StringBuilder s = new StringBuilder();
                     s.append(prev);
                     s.append(c);
-                    char composed = mapper.getComposed(s.toString());
+                    char composed = getComposed(s.toString());
                     if (composed != 0) {
                         ic.deleteSurroundingText(1, 0);
                         c = composed;
@@ -1054,6 +1054,14 @@ public class LatinIME extends InputMethodService
             }
         }
         return false;
+    }
+
+    private char getComposed(String s) {
+        long p = mLastKeyTime;
+        mLastKeyTime = System.currentTimeMillis();
+        if ((mLastKeyTime - p) < 500)
+            return mapper.getComposed(s);
+        return 0;
     }
 
     @Override
@@ -1268,6 +1276,7 @@ public class LatinIME extends InputMethodService
                 when > mLastKeyTime + QUICK_PRESS) {
             mDeleteCount = 0;
         }
+        System.out.println("------------------ " + primaryCode);
         mLastKeyTime = when;
         final boolean distinctMultiTouch = mKeyboardSwitcher.hasDistinctMultitouch();
         switch (primaryCode) {
@@ -1322,6 +1331,9 @@ public class LatinIME extends InputMethodService
                 break;
             case 9 /*Tab*/:
                 sendDownUpKeyEvents(KeyEvent.KEYCODE_TAB);
+                break;
+            case MyKeyboard.NEXT_KEYBOARD:
+                toggleLanguage(false, true);
                 break;
             default:
                 if (primaryCode != KEYCODE_ENTER) {

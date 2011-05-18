@@ -125,7 +125,8 @@ public class IMESettings extends PreferenceActivity
     }
 
     private void updateSettingsKeySummary() {
-        mSettingsKeyPreference.setSummary(
+        if (mSettingsKeyPreference != null)
+            mSettingsKeyPreference.setSummary(
                 getResources().getStringArray(R.array.settings_key_modes)
                 [mSettingsKeyPreference.findIndexOfValue(mSettingsKeyPreference.getValue())]);
     }
@@ -136,7 +137,8 @@ public class IMESettings extends PreferenceActivity
     }
 
     private void updateVoiceModeSummary() {
-        mVoicePreference.setSummary(
+        if (mVoicePreference != null)
+            mVoicePreference.setSummary(
                 getResources().getStringArray(R.array.voice_input_modes_summary)
                 [mVoicePreference.findIndexOfValue(mVoicePreference.getValue())]);
     }

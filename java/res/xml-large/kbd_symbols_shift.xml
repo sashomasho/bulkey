@@ -68,14 +68,16 @@
             android:isModifier="true"
             android:isRepeatable="true"
             android:keyEdgeFlags="right"
-            android:keyWidth="10%p" />
+            android:keyWidth="8.4%p" />
     </Row>
     <Row>
         <Key
-            android:codes="-199"
+            android:codes="-12"
             android:keyWidth="12%p"
             android:isModifier="true"
             android:isSticky="true"
+            android:keyIcon="@drawable/sym_keyboard_lang"
+            android:iconPreview="@drawable/sym_keyboard_feedback_lang"
             android:keyEdgeFlags="left" />
 
         <Key
@@ -105,7 +107,7 @@
             android:codes="@integer/key_return"
             android:keyIcon="@drawable/sym_keyboard_return"
             android:iconPreview="@drawable/sym_keyboard_feedback_return"
-            android:keyWidth="14%p"
+            android:keyWidth="12.6%p"
             android:isModifier="true"
             android:keyEdgeFlags="right" />
     </Row>
@@ -146,7 +148,7 @@
         <Key
             android:codes="@integer/key_shift"
             android:keyLabel="@string/label_alt_key"
-            android:keyWidth="10%p"
+            android:keyWidth="9.6%p"
             android:isModifier="true"
             android:isRepeatable="true"
             android:keyEdgeFlags="right" />
