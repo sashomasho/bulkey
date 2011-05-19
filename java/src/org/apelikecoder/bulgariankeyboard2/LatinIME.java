@@ -1276,7 +1276,6 @@ public class LatinIME extends InputMethodService
                 when > mLastKeyTime + QUICK_PRESS) {
             mDeleteCount = 0;
         }
-        System.out.println("------------------ " + primaryCode);
         mLastKeyTime = when;
         final boolean distinctMultiTouch = mKeyboardSwitcher.hasDistinctMultitouch();
         switch (primaryCode) {

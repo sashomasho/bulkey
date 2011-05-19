@@ -20,7 +20,9 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TreeSet;
 
 import android.content.SharedPreferences;
@@ -164,7 +166,20 @@ public class InputLanguageSelection extends PreferenceActivity {
 
     ArrayList<Loc> getUniqueLocales() {
         String[] locales = getAssets().getLocales();
+        Set<String> tmp = new HashSet<String>();
+        for (String l : locales) {
+            if (l.length() == 5)
+                tmp.add(l.substring(0, 2));
+        }
+        HashSet<String> filtered = new HashSet<String>();
+        for (String l : locales) {
+            if (l.length() == 5 || !tmp.contains(l))
+                filtered.add(l);
+        }
+        locales = filtered.toArray(new String[]{});
         Arrays.sort(locales);
+        //for (String s : locales)
+        //    System.out.println(">>>>> " + s);
         Collection<Loc> uniqueLocales = new TreeSet<Loc>();
 
         final int origSize = locales.length;
@@ -173,14 +188,14 @@ public class InputLanguageSelection extends PreferenceActivity {
         for (int i = 0 ; i < origSize; i++ ) {
             String s = locales[i];
             int len = s.length();
-            if (len == 5 || s.equals("bg")) {
+            if (/*len == 5 || s.equals("bg")*/len > 0) {
                 Locale l;
                 String language = s.substring(0, 2);
-                if (!s.equals("bg")) {
+                if (len == 5) {
                     String country = s.substring(3, 5);
                     l = new Locale(language, country);
                 } else {
-                    l = new Locale("bg", "BG");
+                    l = new Locale(language, language);
                 }
 
                 // Exclude languages that are not relevant to LatinIME
