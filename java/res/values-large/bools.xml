@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="change_enter_key_label">false</bool>
+    <bool name="settings_key_override">false</bool>
 </resources>

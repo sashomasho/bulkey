@@ -63,6 +63,8 @@ public class LatinKeyboard extends Keyboard {
     private Key mShiftKey;
     private Key mEnterKey;
     private Key mF1Key;
+    private Key mSettingsKey;
+    private boolean mOverrideSettings;
     private final Drawable mHintIcon;
     private Key mSpaceKey;
     private Key m123Key;
@@ -120,7 +122,6 @@ public class LatinKeyboard extends Keyboard {
 
     public LatinKeyboard(Context context, int xmlLayoutResId) {
         this(context, xmlLayoutResId, 0);
-        mChangeEnterKeyLabel = context.getResources().getBoolean(R.bool.change_enter_key_label);
     }
 
     private void correctDPI(Resources res) {
@@ -148,6 +149,9 @@ public class LatinKeyboard extends Keyboard {
         correctDPI(res);
         mMode = mode;
         mRes = res;
+        mOverrideSettings = PreferenceManager.getDefaultSharedPreferences(context)
+            .getBoolean(IMESettings.OVERRIDE_SETTINGS_KEY, res.getBoolean(R.bool.settings_key_override));
+        mChangeEnterKeyLabel = res.getBoolean(R.bool.change_enter_key_label);
         mShiftLockIcon = res.getDrawable(R.drawable.sym_keyboard_shift_locked);
         mShiftLockPreviewIcon = res.getDrawable(R.drawable.sym_keyboard_feedback_shift_locked);
         setDefaultBounds(mShiftLockPreviewIcon);
@@ -210,6 +214,9 @@ public class LatinKeyboard extends Keyboard {
         case KEYCODE_MODE_CHANGE:
             m123Key = key;
             m123Label = key.label;
+            break;
+        case -100: //setings key
+            mSettingsKey = key;
             break;
         }
 
@@ -388,6 +395,7 @@ public class LatinKeyboard extends Keyboard {
     private void updateDynamicKeys() {
         update123Key();
         updateF1Key();
+        updateSettingsKey();
     }
 
     private void update123Key() {
@@ -429,6 +437,15 @@ public class LatinKeyboard extends Keyboard {
                 setNonMicF1Key(mF1Key, ",", R.xml.popup_comma);
             }
         }
+    }
+
+    private void updateSettingsKey() {
+        if (mSettingsKey != null && mOverrideSettings) {
+            mSettingsKey.codes = new int[] {-12};
+            mSettingsKey.icon = mContext.getResources().getDrawable(R.drawable.sym_keyboard_lang);
+            mSettingsKey.iconPreview = null;
+        }
+        mSettingsKey = null; //updated
     }
 
     private void setMicF1Key(Key key) {

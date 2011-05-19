@@ -56,6 +56,7 @@ public class IMESettings extends PreferenceActivity
     private static final String PREDICTION_SETTINGS_KEY = "prediction_settings";
     private static final String VOICE_SETTINGS_KEY = "voice_mode";
     public static final String DPI_KEY = "dpi";
+    public static final String OVERRIDE_SETTINGS_KEY = "settings_key_override";
     /* package */ static final String PREF_SETTINGS_KEY = "settings_key";
 
     private static final String TAG = "IMESettings";
@@ -122,7 +123,7 @@ public class IMESettings extends PreferenceActivity
                     .equals(mVoiceModeOff)) {
                 showVoiceConfirmation();
             }
-        } else if (key.equals(DPI_KEY)) {
+        } else if (key.equals(DPI_KEY) || key.equals(OVERRIDE_SETTINGS_KEY)) {
             Toast.makeText(this, "You may need to switch the layout, so the change can take effect", Toast.LENGTH_LONG).show();
         }
         mVoiceOn = !(prefs.getString(VOICE_SETTINGS_KEY, mVoiceModeOff).equals(mVoiceModeOff));

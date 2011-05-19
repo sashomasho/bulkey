@@ -64,6 +64,14 @@
             android:defaultValue="@string/settings_key_mode_auto"
             />
 
+    <CheckBoxPreference
+            android:key="settings_key_override"
+            android:title="Use settings key to change language"
+            android:summary="Use settings key to change language"
+            android:persistent="true"
+            android:defaultValue="@bool/settings_key_override"
+            />
+
     <ListPreference
             android:key="voice_mode"
             android:title="@string/voice_input"
