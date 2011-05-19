@@ -229,6 +229,7 @@ public class LatinIME extends InputMethodService
     private CharSequence mJustRevertedSeparator;
     private int mDeleteCount;
     private long mLastKeyTime;
+    private long mLastHwKeyTime;
 
     // Modifier keys state
     private ModifierKeyState mShiftKeyState = new ModifierKeyState();
@@ -1046,6 +1047,7 @@ public class LatinIME extends InputMethodService
                         shift_pressed = Character.isUpperCase(prev);
                     }
                 }
+                mLastHwKeyTime = System.currentTimeMillis();
                 if (shift_pressed || mHardKeyboard.isMetaOn(HardKeyboardState.META_SHIFT))
                     c = Character.toUpperCase(c);
                 mHardKeyboard.updateMetaStateAfterKeypress(HardKeyboardState.META_SHIFT, true);
@@ -1057,9 +1059,7 @@ public class LatinIME extends InputMethodService
     }
 
     private char getComposed(String s) {
-        long p = mLastKeyTime;
-        mLastKeyTime = System.currentTimeMillis();
-        if ((mLastKeyTime - p) < 500)
+        if ((System.currentTimeMillis() - mLastHwKeyTime) < 500)
             return mapper.getComposed(s);
         return 0;
     }
