@@ -16,6 +16,8 @@
 
 package org.apelikecoder.bulgariankeyboard2;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,12 +27,14 @@ import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
@@ -70,6 +74,7 @@ public class LatinKeyboard extends Keyboard {
     private Key m123Key;
     private final int NUMBER_HINT_COUNT = 10;
     private Key[] mNumberHintKeys;
+    private List<Key> hintKeys;
     private Drawable[] mNumberHintIcons = new Drawable[NUMBER_HINT_COUNT];
     private int mSpaceKeyIndex = -1;
     private int mSpaceDragStartX;
@@ -92,7 +97,7 @@ public class LatinKeyboard extends Keyboard {
     private int mPrefLetterX;
     private int mPrefLetterY;
     private int mPrefDistance;
-    private boolean mChangeEnterKeyLabel;
+    private boolean mNotLargeDevice;
 
     // TODO: generalize for any keyboardId
     private boolean mIsBlackSym;
@@ -151,7 +156,7 @@ public class LatinKeyboard extends Keyboard {
         mRes = res;
         mOverrideSettings = PreferenceManager.getDefaultSharedPreferences(context)
             .getBoolean(IMESettings.OVERRIDE_SETTINGS_KEY, res.getBoolean(R.bool.settings_key_override));
-        mChangeEnterKeyLabel = res.getBoolean(R.bool.change_enter_key_label);
+        mNotLargeDevice = res.getBoolean(R.bool.change_enter_key_label);
         mShiftLockIcon = res.getDrawable(R.drawable.sym_keyboard_shift_locked);
         mShiftLockPreviewIcon = res.getDrawable(R.drawable.sym_keyboard_feedback_shift_locked);
         setDefaultBounds(mShiftLockPreviewIcon);
@@ -226,23 +231,70 @@ public class LatinKeyboard extends Keyboard {
             // mNumberHintKeys gets initialized.
             mNumberHintKeys = new Key[NUMBER_HINT_COUNT];
         }
-        int hintNumber = -1;
-        if (LatinKeyboardBaseView.isNumberAtLeftmostPopupChar(key)) {
-            hintNumber = key.popupCharacters.charAt(0) - '0';
-        } else if (LatinKeyboardBaseView.isNumberAtRightmostPopupChar(key)) {
-            hintNumber = key.popupCharacters.charAt(key.popupCharacters.length() - 1) - '0';
-        }
-        if (hintNumber >= 0 && hintNumber <= 9) {
-            mNumberHintKeys[hintNumber] = key;
+        if (mNotLargeDevice) {
+            int hintNumber = -1;
+            if (LatinKeyboardBaseView.isNumberAtLeftmostPopupChar(key)) {
+                hintNumber = key.popupCharacters.charAt(0) - '0';
+            } else if (LatinKeyboardBaseView.isNumberAtRightmostPopupChar(key)) {
+                hintNumber = key.popupCharacters.charAt(key.popupCharacters.length() - 1) - '0';
+            }
+            if (hintNumber >= 0 && hintNumber <= 9) {
+                mNumberHintKeys[hintNumber] = key;
+            }
+        } else {
+            if (key.popupCharacters != null && key.popupCharacters.length() > 0) {
+                if (hintKeys == null) {
+                    hintKeys = new ArrayList<Keyboard.Key>();
+                    map = new HashMap<Keyboard.Key, Drawable>();
+                }
+                hintKeys.add(key);
+                map.put(key, new MyDrawable(key));
+            }
         }
 
         return key;
     }
 
+    private HashMap<Key, Drawable> map;
+    private class MyDrawable extends Drawable {
+
+        private Key mykey;;
+        private Paint paint;
+        public MyDrawable(Key key) {
+            mykey = key;
+            paint = new Paint();
+            paint.setColor(Color.LTGRAY);
+            paint.setAntiAlias(true);
+            paint.setTextSize(20);
+            paint.setTypeface(Typeface.DEFAULT_BOLD);
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            System.out.println("draw  " + canvas.getWidth() + " " + canvas.getHeight() + " " + mykey.width);
+            canvas.drawText(String.valueOf(mykey.popupCharacters.charAt(0)), mykey.width/2 - 20, -15, paint);
+        }
+
+        @Override
+        public int getOpacity() {
+            return 0;
+        }
+
+        @Override
+        public void setAlpha(int arg0) {
+            
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter arg0) {
+            
+        }
+    };
+
     void setImeOptions(Resources res, int mode, int options) {
         mMode = mode;
         // TODO should clean up this method
-        if (mEnterKey != null && mChangeEnterKeyLabel) {
+        if (mEnterKey != null && mNotLargeDevice) {
             // Reset some of the rarely used attributes.
             mEnterKey.popupCharacters = null;
             mEnterKey.popupResId = 0;
@@ -489,6 +541,10 @@ public class LatinKeyboard extends Keyboard {
             if (mNumberHintKeys[i] != null) {
                 mNumberHintKeys[i].icon = mNumberHintIcons[i];
             }
+        }
+        for (Key key : hintKeys) {
+            key.icon = map.get(key);
+            key.iconPreview = null;
         }
     }
 

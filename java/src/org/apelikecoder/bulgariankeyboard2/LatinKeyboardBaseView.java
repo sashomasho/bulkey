@@ -72,6 +72,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
     private static final boolean DEBUG = false;
 
     public static final int NOT_A_TOUCH_COORDINATE = -1;
+    private boolean isNonLargeDevice;
 
     public interface OnKeyboardActionListener {
 
@@ -399,7 +400,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
 
     public LatinKeyboardBaseView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        isNonLargeDevice = context.getResources().getBoolean(R.bool.change_enter_key_label);
         TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.LatinKeyboardBaseView, defStyle, R.style.LatinKeyboardBaseView);
         LayoutInflater inflate =
@@ -1232,8 +1233,11 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
     }
 
     private boolean shouldDrawLabelAndIcon(Key key) {
-        return isNumberAtEdgeOfPopupChars(key) || isNonMicLatinF1Key(key)
+        if (isNonLargeDevice)
+            return isNumberAtEdgeOfPopupChars(key) || isNonMicLatinF1Key(key)
                 || LatinKeyboard.hasPuncOrSmileysPopup(key);
+        else
+            return key.popupCharacters != null && key.popupCharacters.length() > 0;
     }
 
     private boolean isLatinF1Key(Key key) {
